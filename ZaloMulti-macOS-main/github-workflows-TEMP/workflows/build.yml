@@ -1,0 +1,43 @@
+name: Build ZaloMulti (macOS 12 compatible)
+
+on:
+  workflow_dispatch:   # Cho phép bấm nút "Run workflow" thủ công trên GitHub
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-14   # Máy ảo macOS 14 của GitHub — có sẵn Xcode 16
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app || sudo xcode-select -s /Applications/Xcode_16.app || true
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build ZaloMulti (Intel x86_64, macOS 12 target)
+        run: |
+          set -e
+          xcodebuild -project ZaloMulti.xcodeproj -scheme ZaloMulti \
+            -configuration Release \
+            ARCHS="x86_64" \
+            ONLY_ACTIVE_ARCH=NO \
+            MACOSX_DEPLOYMENT_TARGET=12.0 \
+            CODE_SIGNING_ALLOWED=NO \
+            SYMROOT="$PWD/build" \
+            clean build
+
+      - name: Zip .app kết quả
+        run: |
+          cd build/Release
+          ditto -c -k --sequesterRsrc --keepParent ZaloMulti.app ZaloMulti-Intel-macOS12.zip
+
+      - name: Upload artifact (tải về ở tab Actions sau khi chạy xong)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZaloMulti-Intel-macOS12
+          path: build/Release/ZaloMulti-Intel-macOS12.zip

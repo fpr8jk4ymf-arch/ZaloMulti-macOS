@@ -1,0 +1,10 @@
+{
+    "version": "2.0.1",
+    "build": 4,
+    "release_date": "2026-05-27",
+    "release_notes": "Hotfix sửa lỗi bảo mật và tối ưu ứng dụng để mang đến trải nghiệm tốt nhất.",
+    "download_url": "https://truong.me/zalo-multi-mac/download/ZaloMulti-v2.0.1.zip",
+    "download_size": 655714,
+    "min_os_version": "14.0",
+    "mandatory": true
+}
